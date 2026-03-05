@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Interactive Feedback Form</title>
+
+<style>
+body {
+    font-family: Arial;
+    background:#f4f4f4;
+}
+
+form {
+    width: 350px;
+    margin: 40px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+}
+
+input, textarea {
+    width:100%;
+    padding:8px;
+    margin:10px 0;
+    border:1px solid #ccc;
+}
+
+/* Highlight on hover */
+input:hover, textarea:hover {
+    background-color:#e8f4ff;
+    border-color:#007bff;
+}
+
+.error {
+    color:red;
+    font-size:13px;
+}
+
+.success {
+    color:green;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h2 align="center">Feedback Form</h2>
+
+<form id="feedbackForm">
+
+Name:
+<input type="text" id="name" onkeyup="validateText('name','nameError')">
+<div id="nameError" class="error"></div>
+
+Email:
+<input type="text" id="email" onkeyup="validateEmail('email','emailError')">
+<div id="emailError" class="error"></div>
+
+Feedback:
+<textarea id="feedback" onkeyup="validateText('feedback','feedbackError')"></textarea>
+<div id="feedbackError" class="error"></div>
+
+<button type="button" ondblclick="submitForm()">Submit</button>
+
+<p id="result"></p>
+
+</form>
+
+<script>
+
+// ✅ Reusable text validation function
+function validateText(fieldId, errorId) {
+    let value = document.getElementById(fieldId).value;
+    let error = document.getElementById(errorId);
+
+    if (value.trim().length < 3) {
+        error.innerHTML = "Minimum 3 characters required";
+        return false;
+    } else {
+        error.innerHTML = "";
+        return true;
+    }
+}
+
+// ✅ Reusable email validation function
+function validateEmail(fieldId, errorId) {
+    let value = document.getElementById(fieldId).value;
+    let error = document.getElementById(errorId);
+
+    let pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+    if (!pattern.test(value)) {
+        error.innerHTML = "Enter valid email";
+        return false;
+    } else {
+        error.innerHTML = "";
+        return true;
+    }
+}
+
+// ✅ Double-click submit confirmation
+function submitForm() {
+
+    let nameValid = validateText('name','nameError');
+    let emailValid = validateEmail('email','emailError');
+    let feedbackValid = validateText('feedback','feedbackError');
+
+    if (nameValid && emailValid && feedbackValid) {
+        document.getElementById("result").innerHTML =
+            "✅ Feedback submitted successfully!";
+    } else {
+        document.getElementById("result").innerHTML =
+            "❌ Please correct errors before submitting.";
+    }
+}
+
+</script>
+
+</body>
+</html>
