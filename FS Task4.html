@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Order Management System</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+background:#f5f5f5;
+}
+
+h1{
+color:#333;
+}
+
+.box{
+background:#dfe9f3;
+padding:20px;
+margin-bottom:20px;
+border-left:6px solid #2b7de9;
+border-radius:5px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:10px;
+text-align:left;
+}
+
+th{
+background:#f0f0f0;
+}
+
+button{
+background:#4CAF50;
+color:white;
+border:none;
+padding:10px 15px;
+margin-bottom:15px;
+cursor:pointer;
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Order Management System</h1>
+
+<div class="box">
+<h3>Highest Value Order</h3>
+<p id="highestOrder"></p>
+</div>
+
+<div class="box">
+<h3>Most Active Customer</h3>
+<p id="activeCustomer"></p>
+</div>
+
+<h2>Customer Order History</h2>
+
+<button onclick="loadOrders()">Refresh Order History</button>
+
+<table>
+
+<tr>
+<th>Customer Name</th>
+<th>Email</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Order Date</th>
+<th>Total</th>
+</tr>
+
+<tbody id="orderTable"></tbody>
+
+</table>
+
+<script>
+
+// Customers table
+const customers=[
+{id:1,name:"Alice Johnson",email:"alice@mail.com"},
+{id:2,name:"Bob Smith",email:"bob@mail.com"},
+{id:3,name:"Charlie Brown",email:"charlie@mail.com"}
+];
+
+// Products table
+const products=[
+{id:1,name:"Laptop",price:800},
+{id:2,name:"Phone",price:600},
+{id:3,name:"Headphones",price:100}
+];
+
+// Orders table
+const orders=[
+{customer_id:1,product_id:1,quantity:1,date:"2024-01-01"},
+{customer_id:1,product_id:3,quantity:2,date:"2024-01-10"},
+{customer_id:2,product_id:2,quantity:1,date:"2024-02-05"},
+{customer_id:3,product_id:3,quantity:3,date:"2024-02-15"}
+];
+
+function loadOrders(){
+
+let table="";
+let highest=0;
+let highestText="";
+let customerCount={};
+
+orders.forEach(o=>{
+
+let customer=customers.find(c=>c.id==o.customer_id);
+let product=products.find(p=>p.id==o.product_id);
+
+let total=o.quantity*product.price;
+
+table+=`
+<tr>
+<td>${customer.name}</td>
+<td>${customer.email}</td>
+<td>${product.name}</td>
+<td>${o.quantity}</td>
+<td>${o.date}</td>
+<td>$${total}</td>
+</tr>
+`;
+
+if(total>highest){
+highest=total;
+highestText=`${customer.name} ordered ${product.name} ($${total})`;
+}
+
+customerCount[customer.name]=(customerCount[customer.name]||0)+1;
+
+});
+
+document.getElementById("orderTable").innerHTML=table;
+
+document.getElementById("highestOrder").innerText=highestText;
+
+let maxCustomer="";
+let maxOrders=0;
+
+for(let c in customerCount){
+if(customerCount[c]>maxOrders){
+maxOrders=customerCount[c];
+maxCustomer=c;
+}
+}
+
+document.getElementById("activeCustomer").innerText=
+maxCustomer+" with "+maxOrders+" orders";
+
+}
+
+loadOrders();
+
+</script>
+
+</body>
+</html>
