@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Records Dashboard</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+}
+
+table{
+border-collapse: collapse;
+width:80%;
+margin-top:20px;
+}
+
+th,td{
+border:1px solid black;
+padding:10px;
+text-align:left;
+}
+
+th{
+background:#f2f2f2;
+}
+
+.controls{
+margin-bottom:20px;
+}
+
+</style>
+
+<script>
+
+const students = [
+{name:"Alice Johnson",date:"2023-09-01",dept:"Computer Science"},
+{name:"Bob Smith",date:"2023-08-15",dept:"Mathematics"},
+{name:"Charlie Brown",date:"2023-07-20",dept:"Physics"},
+{name:"Diana Prince",date:"2023-09-10",dept:"Computer Science"},
+{name:"Eve Adams",date:"2023-06-05",dept:"Mathematics"},
+{name:"Frank Miller",date:"2023-10-01",dept:"Physics"},
+{name:"Grace Lee",date:"2023-11-15",dept:"Computer Science"}
+];
+
+function display(data){
+
+let table="";
+
+data.forEach(s=>{
+table += `<tr>
+<td>${s.name}</td>
+<td>${s.date}</td>
+<td>${s.dept}</td>
+</tr>`;
+});
+
+document.getElementById("tableBody").innerHTML=table;
+}
+
+function sortData(){
+
+let sortType=document.getElementById("sort").value;
+
+let sorted=[...students];
+
+if(sortType=="name"){
+sorted.sort((a,b)=>a.name.localeCompare(b.name));
+}
+
+if(sortType=="date"){
+sorted.sort((a,b)=>new Date(a.date)-new Date(b.date));
+}
+
+display(sorted);
+}
+
+function filterDept(){
+
+let dept=document.getElementById("dept").value;
+
+if(dept=="All"){
+display(students);
+}else{
+
+let filtered=students.filter(s=>s.dept==dept);
+display(filtered);
+
+}
+}
+
+function countStudents(){
+
+let counts={};
+
+students.forEach(s=>{
+counts[s.dept]=(counts[s.dept]||0)+1;
+});
+
+let output="";
+
+for(let d in counts){
+output += d + ": " + counts[d] + " students<br>";
+}
+
+document.getElementById("count").innerHTML=output;
+
+}
+
+window.onload=function(){
+
+display(students);
+countStudents();
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Student Records Dashboard</h2>
+
+<div class="controls">
+
+Sort by:
+<select id="sort" onchange="sortData()">
+<option value="name">Name</option>
+<option value="date">Date</option>
+</select>
+
+&nbsp;&nbsp;
+
+Filter by Department:
+<select id="dept" onchange="filterDept()">
+<option>All</option>
+<option>Computer Science</option>
+<option>Mathematics</option>
+<option>Physics</option>
+</select>
+
+</div>
+
+<h3>Students per Department</h3>
+
+<div id="count"></div>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Enrollment Date</th>
+<th>Department</th>
+</tr>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</body>
+</html>
